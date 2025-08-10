@@ -6,6 +6,10 @@ import xyz.ibudai.translation.engine.enums.Language;
 @Data
 public class ResponseDTO {
 
+    private Boolean success;
+
+    private String errorMsg;
+
     private Language sourceType;
 
     private String sourceText;

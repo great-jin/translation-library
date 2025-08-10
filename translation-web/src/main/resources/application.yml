@@ -21,7 +21,7 @@ mybatis:
 
 engine:
   host: http://127.0.0.1:8080
-  nllb: ${engine.host}/nllb/translate
-  nllbBatch: ${engine.host}/nllb/translate/batch
+  nllb: ${engine.host}/api/nllb/translate
+  nllbBatch: ${engine.host}/api/nllb/translate/batch
   connTimeout: 5
   readTimeout: 5

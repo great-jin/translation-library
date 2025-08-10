@@ -20,10 +20,13 @@ import xyz.ibudai.translation.engine.enums.Model;
 import xyz.ibudai.translation.engine.model.RequestDTO;
 import xyz.ibudai.translation.engine.model.ResponseDTO;
 
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
+import java.util.Map;
 
 @Slf4j
 @Component
@@ -83,37 +86,84 @@ public class TranslationIntercept implements Interceptor {
     }
 
 
-    private void fieldTranslate(List<Object> dataList) throws Exception {
+    private void fieldTranslate(List<Object> dataList) throws Throwable {
         if (CollectionUtils.isEmpty(dataList)) {
             return;
         }
 
+        // 获取语言环境
         Locale locale = LocaleContextHolder.getLocale();
         Language language = Language.valueOf(locale.getLanguage());
+
+        // 反射实例
+        Class<?> clazz = dataList.get(0).getClass();
+        MethodHandles.Lookup lookup =
+                MethodHandles.privateLookupIn(clazz, MethodHandles.lookup());
+
+        // 数据处理
+        Map<Field, MethodHandle> getterHandleMap = new HashMap<>();
+        Map<Field, MethodHandle> setterHandleMap = new HashMap<>();
         for (Object row : dataList) {
-            Field[] fields = row.getClass().getDeclaredFields();
+            Field[] fields = clazz.getDeclaredFields();
             for (Field field : fields) {
-                field.setAccessible(true);
-                if (field.getType() != String.class) {
-                    // 仅处理文本
-                    continue;
-                }
-                if (!field.isAnnotationPresent(Translation.class)) {
-                    // 不存在注解
-                    continue;
-                }
-                Object fieldContent = field.get(row);
-                if (Objects.isNull(fieldContent) || fieldContent.toString().isEmpty()) {
-                    // 内容为空
+                if (field.getType() != String.class || !field.isAnnotationPresent(Translation.class)) {
+                    // 非字符串或不存在注解
                     continue;
                 }
 
-                RequestDTO req = new RequestDTO();
-                req.setText(fieldContent.toString());
-                req.setTargetType(language);
-                ResponseDTO res = engineClient.translate(Model.NLLB, req);
-                field.set(row, res.getTargetText());
+                try {
+                    // 获取目标字段
+                    MethodHandle getter = findGetter(lookup, getterHandleMap, clazz, field);
+                    String fieldContent = (String) getter.invoke(row);
+                    if (fieldContent == null || fieldContent.isEmpty()) {
+                        // 内容为空不处理
+                        continue;
+                    }
+
+                    // 翻译请求
+                    RequestDTO req = new RequestDTO();
+                    req.setText(fieldContent);
+                    req.setTargetType(language);
+                    ResponseDTO res = engineClient.translate(Model.NLLB, req);
+                    if (!Boolean.TRUE.equals(res.getSuccess())) {
+                        log.error("request failed, res: {}", res);
+                        continue;
+                    }
+
+                    // 设置翻译结果
+                    MethodHandle setter = findSetter(lookup, setterHandleMap, clazz, field);
+                    setter.invoke(row, res.getTargetText());
+                } catch (Throwable e) {
+                    // 失败跳过，保留原值
+                    log.error("translate error", e);
+                }
             }
         }
+        getterHandleMap.clear();
+        setterHandleMap.clear();
+    }
+
+    private MethodHandle findGetter(MethodHandles.Lookup lookup, Map<Field, MethodHandle> map, Class<?> clazz, Field field) {
+        return map.computeIfAbsent(
+                field, k -> {
+                    try {
+                        return lookup.findGetter(clazz, k.getName(), String.class);
+                    } catch (NoSuchFieldException | IllegalAccessException e) {
+                        throw new IllegalStateException(e);
+                    }
+                }
+        );
+    }
+
+    private MethodHandle findSetter(MethodHandles.Lookup lookup, Map<Field, MethodHandle> map, Class<?> clazz, Field field) {
+        return map.computeIfAbsent(
+                field, k -> {
+                    try {
+                        return lookup.findSetter(clazz, k.getName(), String.class);
+                    } catch (NoSuchFieldException | IllegalAccessException e) {
+                        throw new IllegalStateException(e);
+                    }
+                }
+        );
     }
 }
