@@ -139,8 +139,6 @@ public class TranslationIntercept implements Interceptor {
                 }
             }
         }
-        getterHandleMap.clear();
-        setterHandleMap.clear();
     }
 
     private MethodHandle findGetter(MethodHandles.Lookup lookup, Map<Field, MethodHandle> map, Class<?> clazz, Field field) {
