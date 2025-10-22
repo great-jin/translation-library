@@ -1,35 +1,47 @@
 package xyz.ibudai.translation.engine.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum Language {
 
     /**
      * 英语
      */
-    en,
+    en("en-US"),
 
     /**
      * 中文.
      */
-    zh,
-
-    /**
-     * 法语
-     */
-    fr,
+    zh("zh-CN"),
 
     /**
      * 日语
      */
-    ja,
+    ja("ja-JP"),
 
     /**
-     * 韩语
+     * 越南语
      */
-    ko,
+    vi("vi-VN"),
 
     /**
      * 德语
      */
-    de;
+    de("de-DE");
 
+    private final String code;
+
+    Language(String code) {
+        this.code = code;
+    }
+
+    public static Language getLanguage(String code) {
+        for (Language language : values()) {
+            if (language.code.equals(code)) {
+                return language;
+            }
+        }
+        return null;
+    }
 }

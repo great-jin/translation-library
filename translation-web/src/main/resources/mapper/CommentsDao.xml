@@ -7,6 +7,11 @@
         <result property="content" column="content" jdbcType="VARCHAR"/>
     </resultMap>
 
+    <select id="list" resultMap="baseMap">
+        select *
+        from tb_comments
+    </select>
+
     <!--查询单个-->
     <select id="queryById" resultMap="baseMap">
         select *

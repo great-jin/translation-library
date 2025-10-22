@@ -1,10 +1,14 @@
 package xyz.ibudai.translation.web.rest;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.i18n.LocaleContextHolder;
 import xyz.ibudai.translation.web.entity.Comments;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import xyz.ibudai.translation.web.service.CommentsService;
+
+import java.util.List;
+import java.util.Locale;
 
 /**
  * (TbComments)表控制层
@@ -19,13 +23,14 @@ public class CommentsResource {
 
     private final CommentsService commentsService;
 
+    @GetMapping("list")
+    public ResponseEntity<List<Comments>> list(String language) {
+        Locale locale = Locale.forLanguageTag(language);
+        LocaleContextHolder.setLocale(locale);
 
-    /**
-     * 通过主键查询单条数据
-     *
-     * @param id 主键
-     * @return 单条数据
-     */
+        return ResponseEntity.ok(commentsService.list());
+    }
+
     @GetMapping("{id}")
     public ResponseEntity<Comments> queryById(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(commentsService.queryById(id));

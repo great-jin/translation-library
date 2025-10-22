@@ -2,6 +2,8 @@ package xyz.ibudai.translation.web.service;
 
 import xyz.ibudai.translation.web.entity.Comments;
 
+import java.util.List;
+
 /**
  * (TbComments)表服务接口
  *
@@ -10,12 +12,8 @@ import xyz.ibudai.translation.web.entity.Comments;
  */
 public interface CommentsService {
 
-    /**
-     * 通过ID查询单条数据
-     *
-     * @param id 主键
-     * @return 实例对象
-     */
+    List<Comments> list();
+
     Comments queryById(Integer id);
 
 }

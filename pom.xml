@@ -19,6 +19,7 @@
         <module>translation-engine</module>
         <module>translation-core</module>
         <module>translation-web</module>
+        <module>translation-view</module>
     </modules>
 
     <properties>

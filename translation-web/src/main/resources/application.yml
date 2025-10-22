@@ -1,7 +1,7 @@
 server:
   port: 8090
   servlet:
-    context-path: /translation
+    context-path: /translationEngine
 
 
 spring:
