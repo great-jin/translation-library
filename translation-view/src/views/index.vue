@@ -1,112 +1,122 @@
 <template>
-  <div class="container">
-    <el-card>
-      <el-row
-          type="flex"
-          justify="center"
-          align="middle"
-          style="margin-bottom: 10px"
-      >
-        <h1>NLLB AI 翻译引擎</h1>
-      </el-row>
+  <div>
+    <el-container>
+      <el-header>
+        <el-row style="height: 100%; width: 100%">
+          <el-col :span="4">
+            <h2 style="color: white; line-height: 100%">
+              GIGA CLOUD TECH
+            </h2>
+          </el-col>
 
-      <el-row
-          type="flex"
-          justify="end"
-          align="middle"
-          style="margin-bottom: 50px;"
-      >
-        <el-select v-model="language"
-                   placeholder="Select"
-                   style="width: 200px;"
-                   size="small"
-                   @change="changeLanguage(language)"
-        >
-          <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-          />
-        </el-select>
-      </el-row>
+          <el-col :span="20">
+            <el-menu
+                mode="horizontal"
+                :ellipsis="false"
+                @select="handleSelect"
+                :default-active="activeMenu"
+                background-color="#545c64"
+                text-color="#fff"
+                active-text-color="#ffd04b"
+                class="home-menu"
+            >
+              <el-menu-item index="translate"
+                            class="head-banner"
+                            style="font-weight: bold; font-size: 16px"
+              >NLLB 翻译</el-menu-item>
+            </el-menu>
+          </el-col>
+        </el-row>
+      </el-header>
 
+      <el-main>
+        <router-view v-if="isRouterAlive"/>
+      </el-main>
 
-      <el-table
-          v-loading="loading"
-          :data="tableData"
-          style="width: 100%"
-          highlight-current-row
-      >
-        <el-table-column prop="id"
-                         label="序号"
-                         width="150"
-                         align="center"
-        />
-        <el-table-column prop="name"
-                         label="产品名称"
-                         width="150"
-                         align="center"
-        />
-        <el-table-column prop="content"
-                         label="产品描述"
-                         align="center"
-        />
-      </el-table>
-    </el-card>
+      <el-footer class="footer-copyright">
+        <div>
+          <h2 style="color: white; font-weight: normal; padding: 0; margin: 0;">
+            Copyright 2025 GIGA CLOUD TECH ©All Rights Reserved
+          </h2>
+        </div>
+      </el-footer>
+    </el-container>
   </div>
 </template>
 
 <script>
-import {listComments} from "@/api/commentsApi";
-
 export default {
+  provide() {
+    return {
+      reload: this.reload
+    }
+  },
   data() {
     return {
-      loading: false,
-      tableData: [],
-      language: 'zh-CN',
-      options:  [
-        {
-          label: 'Chinese',
-          value: 'zh-CN',
-        },
-        {
-          label: 'English',
-          value: 'en-US',
-        },
-        {
-          label: 'Japan',
-          value: 'ja-JP',
-        },
-        {
-          label: 'Germany',
-          value: 'de-DE',
-        },
-        {
-          label: 'Vietnam',
-          value: 'vi-VN',
-        },
-      ]
+      isRouterAlive: true,
+      activeMenu: 'product'
     }
   },
   mounted() {
-    this.changeLanguage()
+    this.handleSelect('product')
   },
   methods: {
-    changeLanguage() {
-      this.loading = true
-      listComments(this.language).then(res => {
-        this.tableData = res.data
-        this.loading = false
+    reload() {
+      this.isRouterAlive = false
+      this.$nextTick(function () {
+        this.isRouterAlive = true
       })
+    },
+    handleSelect() {
+      this.activeMenu = 'product'
+      this.$router.push('/product')
     }
   }
 }
 </script>
 
 <style>
-.container {
-  padding: 200px 200px;
+.el-header, .el-footer {
+  width: 100%;
+  height: 80px;
+  padding: 0;
+  display: flex;
+  background-color: #72C1F2;
+  color: #333;
+  text-align: center;
+}
+
+.head-banner {
+  font-weight: bold;
+  font-size: 16px;
+  height: calc(100vh / 4);
+  padding: 0 50px;
+}
+
+.el-main {
+  background-color: #E9EEF3;
+  color: #333;
+  text-align: center;
+  height: calc(100vh - 120px);
+}
+
+.footer-copyright {
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.home-menu {
+  width: 100%;
+  height: 100%;
+}
+
+.el-menu--collapse .el-menu .el-submenu, .el-menu--popup {
+  min-width: 120px !important;
+}
+
+.el-menu--horizontal > .el-menu-item:nth-child(4) {
+  margin-right: auto;
 }
 </style>

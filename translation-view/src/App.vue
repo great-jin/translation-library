@@ -2,7 +2,6 @@
   <div>
     <router-link to="/" />
   </div>
-
   <router-view/>
 </template>
 

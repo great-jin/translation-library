@@ -20,8 +20,6 @@ public class Comments implements Serializable {
 
     private Integer id;
 
-    private String name;
-
     @Translation
     private String content;
 
