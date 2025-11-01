@@ -28,7 +28,17 @@ public enum Language {
     /**
      * 德语
      */
-    de("de-DE");
+    de("de-DE"),
+
+    /**
+     * 西班牙语
+     */
+    es("es-ES"),
+
+    /**
+     * 法语
+     */
+    fr("fr-FR");
 
     private final String code;
 

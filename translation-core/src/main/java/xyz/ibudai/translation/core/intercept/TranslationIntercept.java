@@ -17,16 +17,18 @@ import xyz.ibudai.translation.core.annotation.Translation;
 import xyz.ibudai.translation.engine.EngineClient;
 import xyz.ibudai.translation.engine.enums.Language;
 import xyz.ibudai.translation.engine.enums.Model;
-import xyz.ibudai.translation.engine.model.RequestDTO;
+import xyz.ibudai.translation.engine.model.BatchReqDTO;
 import xyz.ibudai.translation.engine.model.ResponseDTO;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 @Slf4j
 @Component
@@ -94,15 +96,39 @@ public class TranslationIntercept implements Interceptor {
         // 获取语言环境
         Locale locale = LocaleContextHolder.getLocale();
         Language language = Language.valueOf(locale.getLanguage());
+        if (Objects.equals(language, Language.zh)) {
+            return;
+        }
 
         // 反射实例
         Class<?> clazz = dataList.get(0).getClass();
         MethodHandles.Lookup lookup =
                 MethodHandles.privateLookupIn(clazz, MethodHandles.lookup());
 
-        // 数据处理
+        // 原始记录读取
         Map<Field, MethodHandle> getterHandleMap = new HashMap<>();
         Map<Field, MethodHandle> setterHandleMap = new HashMap<>();
+        List<String> sentences = readContent(dataList, clazz, lookup, getterHandleMap);
+
+        // 翻译服务
+        BatchReqDTO reqDTO = new BatchReqDTO();
+        reqDTO.setTargetType(language);
+        reqDTO.setTextList(sentences);
+        List<ResponseDTO> resList = engineClient.batchTranslate(Model.NLLB, reqDTO);
+        Map<String, String> transMap = new HashMap<>();
+        for (ResponseDTO responseDTO : resList) {
+            transMap.put(responseDTO.getSourceText(), responseDTO.getTargetText());
+        }
+
+        // 内容回填
+        this.writeContent(dataList, clazz, transMap, lookup, getterHandleMap, setterHandleMap);
+    }
+
+    private List<String> readContent(List<Object> dataList,
+                                     Class<?> clazz,
+                                     MethodHandles.Lookup lookup,
+                                     Map<Field, MethodHandle> getterHandleMap) {
+        List<String> sentences = new ArrayList<>();
         for (Object row : dataList) {
             Field[] fields = clazz.getDeclaredFields();
             for (Field field : fields) {
@@ -120,22 +146,47 @@ public class TranslationIntercept implements Interceptor {
                         continue;
                     }
 
-                    // 翻译请求
-                    RequestDTO req = new RequestDTO();
-                    req.setText(fieldContent);
-                    req.setTargetType(language);
-                    ResponseDTO res = engineClient.translate(Model.NLLB, req);
-                    if (!Boolean.TRUE.equals(res.getSuccess())) {
-                        log.error("request failed, res: {}", res);
+                    sentences.add(fieldContent);
+                } catch (Throwable e) {
+                    log.error("readContent error", e);
+                }
+            }
+        }
+        return sentences;
+    }
+
+    private void writeContent(List<Object> dataList,
+                              Class<?> clazz,
+                              Map<String, String> transMap,
+                              MethodHandles.Lookup lookup,
+                              Map<Field, MethodHandle> getterHandleMap,
+                              Map<Field, MethodHandle> setterHandleMap) {
+        for (Object row : dataList) {
+            Field[] fields = clazz.getDeclaredFields();
+            for (Field field : fields) {
+                if (field.getType() != String.class || !field.isAnnotationPresent(Translation.class)) {
+                    // 非字符串或不存在注解
+                    continue;
+                }
+
+                try {
+                    // 获取目标字段
+                    MethodHandle getter = findGetter(lookup, getterHandleMap, clazz, field);
+                    String fieldContent = (String) getter.invoke(row);
+                    if (fieldContent == null || fieldContent.isEmpty()) {
+                        // 内容为空不处理
+                        continue;
+                    }
+                    String res = transMap.get(fieldContent);
+                    if (Objects.isNull(res)) {
                         continue;
                     }
 
-                    // 设置翻译结果
                     MethodHandle setter = findSetter(lookup, setterHandleMap, clazz, field);
-                    setter.invoke(row, res.getTargetText());
+                    setter.invoke(row, res);
                 } catch (Throwable e) {
                     // 失败跳过，保留原值
-                    log.error("translate error", e);
+                    log.error("writeContent error", e);
                 }
             }
         }

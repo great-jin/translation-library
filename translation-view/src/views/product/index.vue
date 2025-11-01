@@ -82,6 +82,14 @@ export default {
           label: 'Tiếng Việt',
           value: 'vi-VN',
         },
+        {
+          label: 'Español',
+          value: 'es-ES',
+        },
+        {
+          label: 'Français',
+          value: 'fr-FR',
+        }
       ]
     }
   },

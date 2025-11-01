@@ -24,7 +24,7 @@ public class CommentsResource {
     private final CommentsService commentsService;
 
     @GetMapping("list")
-    public ResponseEntity<List<Comments>> list(String language) {
+    public ResponseEntity<List<Comments>> list(@RequestParam("language") String language) {
         Locale locale = Locale.forLanguageTag(language);
         LocaleContextHolder.setLocale(locale);
 
