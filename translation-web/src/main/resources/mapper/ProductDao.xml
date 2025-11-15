@@ -1,22 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="xyz.ibudai.translation.web.dao.CommentsDao">
+<mapper namespace="xyz.ibudai.translation.web.dao.ProductDao">
 
-    <resultMap type="xyz.ibudai.translation.web.entity.Comments" id="baseMap">
+    <resultMap type="xyz.ibudai.translation.web.entity.Product" id="baseMap">
         <result property="id" column="id" jdbcType="INTEGER"/>
         <result property="content" column="content" jdbcType="VARCHAR"/>
     </resultMap>
 
     <select id="list" resultMap="baseMap">
-        select *
-        from tb_comments
+        select
+            *
+        from
+            tb_product
     </select>
 
     <!--查询单个-->
     <select id="queryById" resultMap="baseMap">
-        select *
-        from tb_comments
-        where id = #{id}
+        select
+            *
+        from
+            tb_product
+        where
+            id = #{id}
     </select>
 </mapper>
 

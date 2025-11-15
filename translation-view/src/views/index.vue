@@ -20,10 +20,14 @@
                 active-text-color="#ffd04b"
                 class="home-menu"
             >
-              <el-menu-item index="translate"
+              <el-menu-item index="productView"
                             class="head-banner"
                             style="font-weight: bold; font-size: 16px"
-              >NLLB 翻译</el-menu-item>
+              >列表展示</el-menu-item>
+              <el-menu-item index="translateView"
+                            class="head-banner"
+                            style="font-weight: bold; font-size: 16px"
+              >文本翻译</el-menu-item>
             </el-menu>
           </el-col>
         </el-row>
@@ -54,11 +58,11 @@ export default {
   data() {
     return {
       isRouterAlive: true,
-      activeMenu: 'product'
+      activeMenu: 'productView'
     }
   },
   mounted() {
-    this.handleSelect('product')
+    this.handleSelect('productView')
   },
   methods: {
     reload() {
@@ -67,9 +71,17 @@ export default {
         this.isRouterAlive = true
       })
     },
-    handleSelect() {
-      this.activeMenu = 'product'
-      this.$router.push('/product')
+    handleSelect(type) {
+      switch (type) {
+        case 'productView':
+          this.activeMenu = 'productView'
+          this.$router.push('/product')
+          break;
+        case 'translateView':
+          this.activeMenu = 'translateView'
+          this.$router.push('/translate')
+          break;
+      }
     }
   }
 }

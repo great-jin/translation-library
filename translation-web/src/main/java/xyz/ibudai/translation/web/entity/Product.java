@@ -7,13 +7,13 @@ import java.io.Serial;
 import java.io.Serializable;
 
 /**
- * (TbComments)实体类
+ * (Product)实体类
  *
- * @author makejava
+ * @author ibudai
  * @since 2025-08-03 10:26:24
  */
 @Data
-public class Comments implements Serializable {
+public class Product implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;

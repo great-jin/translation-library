@@ -14,6 +14,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 import xyz.ibudai.translation.web.basic.model.ResponseData;
 
 @RestControllerAdvice
+@SuppressWarnings("all")
 public class ResponseHandle implements ResponseBodyAdvice<Object> {
 
     @Autowired

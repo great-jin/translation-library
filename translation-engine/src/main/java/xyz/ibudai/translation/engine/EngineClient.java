@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import xyz.ibudai.translation.engine.enums.Model;
-import xyz.ibudai.translation.engine.model.BatchReqDTO;
-import xyz.ibudai.translation.engine.model.RequestDTO;
-import xyz.ibudai.translation.engine.model.ResponseDTO;
+import xyz.ibudai.translation.engine.entity.dto.BatchReqDTO;
+import xyz.ibudai.translation.engine.entity.dto.RequestDTO;
+import xyz.ibudai.translation.engine.entity.dto.ResponseDTO;
 import xyz.ibudai.translation.engine.translator.AbstractTranslator;
 
 import java.util.List;

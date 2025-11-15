@@ -10,10 +10,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
         "xyz.ibudai.translation.web"
 })
 @MapperScan("xyz.ibudai.translation.web.dao")
-public class TranslationToolApplication {
+public class TranslationEngineApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(TranslationToolApplication.class, args);
+        SpringApplication.run(TranslationEngineApplication.class, args);
     }
 
 }

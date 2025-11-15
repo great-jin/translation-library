@@ -17,8 +17,8 @@ import xyz.ibudai.translation.core.annotation.Translation;
 import xyz.ibudai.translation.engine.EngineClient;
 import xyz.ibudai.translation.engine.enums.Language;
 import xyz.ibudai.translation.engine.enums.Model;
-import xyz.ibudai.translation.engine.model.BatchReqDTO;
-import xyz.ibudai.translation.engine.model.ResponseDTO;
+import xyz.ibudai.translation.engine.entity.dto.BatchReqDTO;
+import xyz.ibudai.translation.engine.entity.dto.ResponseDTO;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;

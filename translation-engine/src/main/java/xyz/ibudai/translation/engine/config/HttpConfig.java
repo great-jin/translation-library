@@ -5,7 +5,7 @@ import okhttp3.OkHttpClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import xyz.ibudai.translation.engine.model.EngineProps;
+import xyz.ibudai.translation.engine.entity.props.EngineProps;
 
 import java.util.concurrent.TimeUnit;
 

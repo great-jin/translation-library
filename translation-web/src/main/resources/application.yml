@@ -7,7 +7,7 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.0.21:3306/test_db?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    url: jdbc:mysql://192.168.0.21:3306/translate_engine?useUnicode=true&characterEncoding=utf-8&useSSL=false
     username: root
     password: 123456
 
@@ -21,7 +21,12 @@ mybatis:
 
 engine:
   host: http://127.0.0.1:8080
-  nllb: ${engine.host}/api/nllb/translate
-  nllbBatch: ${engine.host}/api/nllb/translate/batch
+  api:
+    nllb: ${engine.host}/api/nllb/translate
+    nllbBatch: ${engine.host}/api/nllb/translate/batch
+    ct2: ${engine.host}/api/ct/translate
+    ct2Batch: ${engine.host}/api/ct/translate/batch
   connTimeout: 5
   readTimeout: 5
+  switch:
+    intercept: false

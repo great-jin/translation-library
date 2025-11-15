@@ -1,15 +1,6 @@
 <template>
   <div class="container">
-    <el-card style="height: calc(100vh - 190px)">
-      <el-row
-          type="flex"
-          justify="center"
-          align="middle"
-          style="margin-bottom: 10px"
-      >
-        <h1>NLLB AI 翻译引擎</h1>
-      </el-row>
-
+    <el-card style="height: calc(100vh - 230px); padding: 30px 60px">
       <el-row
           type="flex"
           justify="end"
@@ -18,7 +9,7 @@
       >
         <el-select v-model="language"
                    placeholder="Select"
-                   style="width: 200px;"
+                   style="width: 120px;"
                    size="small"
                    @change="changeLanguage(language)"
         >
@@ -53,7 +44,7 @@
 </template>
 
 <script>
-import {listComments} from "@/api/commentsApi";
+import {listProduct} from "@/api/productApi";
 
 export default {
   data() {
@@ -99,7 +90,7 @@ export default {
   methods: {
     changeLanguage() {
       this.loading = true
-      listComments(this.language).then(res => {
+      listProduct(this.language).then(res => {
         this.tableData = res.data
         this.loading = false
       })
@@ -107,9 +98,3 @@ export default {
   }
 }
 </script>
-
-<style>
-.container {
-  padding: 14px 24px;
-}
-</style>
