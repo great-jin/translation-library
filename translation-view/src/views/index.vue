@@ -90,7 +90,6 @@ export default {
 <style>
 .el-header, .el-footer {
   width: 100%;
-  height: 80px;
   padding: 0;
   display: flex;
   background-color: #72C1F2;

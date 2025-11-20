@@ -25,6 +25,7 @@
                 placeholder="请输入需要翻译的文本"
                 style="font-size: 16px;"
                 :autosize="{minRows: 15}"
+                @input="inputText"
                 maxlength="5000"
                 show-word-limit
                 autosize
@@ -43,27 +44,11 @@
 
         <el-row style="margin-bottom: 20px">
           <el-col :span="24">
-            <span style="float: left; line-height: 32px;">翻译质量：</span>
-            <el-select
-                v-model="reqInfo.quality"
-                placeholder="选择质量"
-                @change="changeQuantity"
-                style="width: 80px; float: left;"
-            >
-              <el-option
-                  v-for="num in 6"
-                  :key="num"
-                  :label="num"
-                  :value="num"
-              />
-            </el-select>
-
-            <span style="float: left; line-height: 32px; margin-left: 20px;">目标语种：</span>
             <el-select
                 v-model="reqInfo.targetType"
                 placeholder="选择语种"
                 @change="changeLanguage"
-                style="width: 120px; float: left;"
+                style="width: 120px; float: right;"
             >
               <el-option label="中文" value="zh"/>
               <el-option label="English" value="en"/>
@@ -73,21 +58,28 @@
               <el-option label="Español" value="es"/>
               <el-option label="Français" value="fr"/>
             </el-select>
+            <span style="float: right; line-height: 32px; margin-left: 20px;">目标语种：</span>
 
-            <el-button
-                type="primary"
-                @click="translation"
-                style="float: right;"
-                :disabled="loading"
-            >翻 译
-            </el-button>
+            <el-select
+                v-model="reqInfo.quality"
+                placeholder="选择质量"
+                @change="changeQuantity"
+                style="width: 80px; float: right;"
+            >
+              <el-option
+                  v-for="num in 6"
+                  :key="num"
+                  :label="num"
+                  :value="num"
+              />
+            </el-select>
+            <span style="float: right; line-height: 32px;">翻译质量：</span>
           </el-col>
         </el-row>
 
         <el-row class="input-body">
           <el-col :span="24" style="margin-bottom: 20px">
             <el-input
-                v-loading="loading"
                 type="textarea"
                 v-model="resultText"
                 placeholder="翻译内容将显示在此处"
@@ -108,7 +100,6 @@ import {translate} from "@/api/nllbApi";
 export default {
   data() {
     return {
-      loading: false,
       reqInfo: {
         quality: 2,
         text: '',
@@ -118,6 +109,14 @@ export default {
     }
   },
   methods: {
+    inputText(data) {
+      if (data === null || data === '') {
+        this.resultText = ''
+        return
+      }
+
+      this.translation()
+    },
     async translation() {
       this.resultText = ''
       if (this.reqInfo.text === '') {
@@ -129,12 +128,11 @@ export default {
         return
       }
 
-      this.loading = true
+      this.resultText = '内容翻译中...'
       translate(this.reqInfo).then(res => {
         if (res.data !== undefined && res.data !== null) {
           this.resultText = res.data.targetText
         }
-        this.loading = false
       })
     },
     changeLanguage(data) {

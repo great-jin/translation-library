@@ -3,16 +3,16 @@ const { defineConfig } = require('@vue/cli-service')
 module.exports = defineConfig({
   devServer: {
     open: true,
-    host: 'localhost',
-    port: 9080,
+    host: process.env.VUE_APP_API_HOST,
+    port: process.env.VUE_APP_API_PORT,
     https: false,
     proxy: {
-      ['/translation-engine']: {
-        target: 'http://localhost:8090',
+      [process.env.VUE_APP_API_BASE_PREFIX]: {
+        target: process.env.VUE_APP_API_BASE_URL,
         ws: true,
         changOrigin: true,
         pathRewrite: {
-          ['^/translation-engine']: '/translationEngine'
+          [`^${process.env.VUE_APP_API_BASE_PREFIX}`]: process.env.VUE_APP_API_SERVLET_PREFIX
         }
       }
     },

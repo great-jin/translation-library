@@ -3,7 +3,7 @@ import axios from 'axios';
 function request(axiosConfig) {
     const service = axios.create(
         {
-            baseURL: `/translation-engine`,
+            baseURL: `${process.env.VUE_APP_API_BASE_PREFIX}`,
             timeout: 60000,
         }
     );
