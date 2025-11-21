@@ -3,6 +3,7 @@ package xyz.ibudai.translation.web.service.impl;
 import lombok.RequiredArgsConstructor;
 import xyz.ibudai.translation.web.entity.Product;
 import xyz.ibudai.translation.web.dao.ProductDao;
+import xyz.ibudai.translation.web.entity.ProductDetail;
 import xyz.ibudai.translation.web.service.ProductService;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +28,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product queryById(Integer id) {
-        return productDao.queryById(id);
+    public ProductDetail getDetail() {
+        return ProductDetail.create();
     }
 }

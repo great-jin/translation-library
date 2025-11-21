@@ -6,3 +6,10 @@ export function listProduct(params) {
         method: 'get'
     })
 }
+
+export function getDetail(params) {
+    return request({
+        url: `/api/product/getDetail?language=${params}`,
+        method: 'get'
+    })
+}

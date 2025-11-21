@@ -20,14 +20,14 @@
                 active-text-color="#ffd04b"
                 class="home-menu"
             >
-              <el-menu-item index="productView"
-                            class="head-banner"
-                            style="font-weight: bold; font-size: 16px"
-              >列表展示</el-menu-item>
-              <el-menu-item index="translateView"
-                            class="head-banner"
-                            style="font-weight: bold; font-size: 16px"
-              >文本翻译</el-menu-item>
+              <el-menu-item
+                  v-for="item in menus"
+                  :index="item.index"
+                  class="head-banner"
+                  style="font-weight: bold; font-size: 16px"
+              >
+                {{ item.name }}
+              </el-menu-item>
             </el-menu>
           </el-col>
         </el-row>
@@ -58,7 +58,19 @@ export default {
   data() {
     return {
       isRouterAlive: true,
-      activeMenu: 'productView'
+      activeMenu: 'productView',
+      menus: [
+        {
+          index: 'productView',
+          name: '列表展示'
+        }, {
+          index: 'detailView',
+          name: '产品详情'
+        }, {
+          index: 'translateView',
+          name: '文本翻译'
+        }
+      ]
     }
   },
   mounted() {
@@ -76,6 +88,10 @@ export default {
         case 'productView':
           this.activeMenu = 'productView'
           this.$router.push('/product')
+          break;
+        case 'detailView':
+          this.activeMenu = 'detailView'
+          this.$router.push('/detail')
           break;
         case 'translateView':
           this.activeMenu = 'translateView'

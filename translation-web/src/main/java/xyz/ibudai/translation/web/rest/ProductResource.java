@@ -5,6 +5,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import xyz.ibudai.translation.web.entity.Product;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import xyz.ibudai.translation.web.entity.ProductDetail;
 import xyz.ibudai.translation.web.service.ProductService;
 
 import java.util.List;
@@ -32,9 +33,12 @@ public class ProductResource {
         return ResponseEntity.ok(productService.list());
     }
 
-    @GetMapping("{id}")
-    public ResponseEntity<Product> queryById(@PathVariable("id") Integer id) {
-        return ResponseEntity.ok(productService.queryById(id));
+    @GetMapping("getDetail")
+    public ResponseEntity<ProductDetail> getDetail(@RequestParam("language") String language) throws Exception {
+        Locale locale = Locale.forLanguageTag(language);
+        LocaleContextHolder.setLocale(locale);
+
+        return ResponseEntity.ok(productService.getDetail());
     }
 }
 

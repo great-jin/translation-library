@@ -1,6 +1,7 @@
 package xyz.ibudai.translation.web.service;
 
 import xyz.ibudai.translation.web.entity.Product;
+import xyz.ibudai.translation.web.entity.ProductDetail;
 
 import java.util.List;
 
@@ -14,6 +15,5 @@ public interface ProductService {
 
     List<Product> list();
 
-    Product queryById(Integer id);
-
+    ProductDetail getDetail();
 }
