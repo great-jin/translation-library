@@ -189,6 +189,8 @@ export default {
   font-family: "Amazon Ember", Arial, sans-serif;
   color: #0F1111;
   background-color: #fff;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .product-main {

@@ -2,6 +2,7 @@ import HomeView from "@/views/index.vue";
 import ProductView from "@/views/product/index.vue";
 import DetailView from "@/views/detail/index.vue";
 import TranslateView from "@/views/translate/index.vue";
+import ChatView from "@/views/chat/index.vue";
 
 export const routers = [
     {
@@ -21,6 +22,10 @@ export const routers = [
                 path: '/translate',
                 name: 'translate',
                 component: TranslateView
+            }, {
+                path: '/chat',
+                name: 'chat',
+                component: ChatView
             }
         ]
     }

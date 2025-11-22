@@ -69,6 +69,9 @@ export default {
         }, {
           index: 'translateView',
           name: '文本翻译'
+        }, {
+          index: 'chatView',
+          name: '售后服务'
         }
       ]
     }
@@ -96,6 +99,10 @@ export default {
         case 'translateView':
           this.activeMenu = 'translateView'
           this.$router.push('/translate')
+          break;
+        case 'chatView':
+          this.activeMenu = 'chatView'
+          this.$router.push('/chat')
           break;
       }
     }
