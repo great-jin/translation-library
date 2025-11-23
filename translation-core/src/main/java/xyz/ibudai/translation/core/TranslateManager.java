@@ -2,10 +2,12 @@ package xyz.ibudai.translation.core;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import xyz.ibudai.translation.core.annotation.Translation;
+import xyz.ibudai.translation.core.util.CollUtils;
 import xyz.ibudai.translation.engine.EngineClient;
 import xyz.ibudai.translation.engine.entity.dto.BatchReqDTO;
 import xyz.ibudai.translation.engine.entity.dto.ResponseDTO;
@@ -21,6 +23,9 @@ import java.util.*;
 @Component
 @RequiredArgsConstructor
 public class TranslateManager {
+
+    @Value("${engine.batchSize:30}")
+    private Integer BATCH_SIZE;
 
     private final EngineClient engineClient;
 
@@ -46,14 +51,18 @@ public class TranslateManager {
         Map<Field, MethodHandle> setterHandleMap = new HashMap<>();
         List<String> sentences = readContent(dataList, clazz, lookup, getterHandleMap);
 
-        // 翻译服务
-        BatchReqDTO reqDTO = new BatchReqDTO();
-        reqDTO.setTargetType(language);
-        reqDTO.setTextList(sentences);
-        List<ResponseDTO> resList = engineClient.batchTranslate(Model.NLLB, reqDTO);
+        // 分批服务请求
         Map<String, String> transMap = new HashMap<>();
-        for (ResponseDTO responseDTO : resList) {
-            transMap.put(responseDTO.getSourceText(), responseDTO.getTargetText());
+        List<List<String>> partitions = CollUtils.partition(sentences, BATCH_SIZE);
+        for (List<String> batch : partitions) {
+            // 翻译服务
+            BatchReqDTO reqDTO = new BatchReqDTO();
+            reqDTO.setTargetType(language);
+            reqDTO.setTextList(batch);
+            List<ResponseDTO> resList = engineClient.batchTranslate(Model.NLLB, reqDTO);
+            for (ResponseDTO responseDTO : resList) {
+                transMap.put(responseDTO.getSourceText(), responseDTO.getTargetText());
+            }
         }
 
         // 内容回填

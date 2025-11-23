@@ -26,7 +26,9 @@ engine:
     nllbBatch: ${engine.host}/api/nllb/translate/batch
     ct2: ${engine.host}/api/ct/translate
     ct2Batch: ${engine.host}/api/ct/translate/batch
+  batchSize: 30
   connTimeout: 5
   readTimeout: 5
   switch:
-    intercept: false
+    aop: true
+    intercept: true

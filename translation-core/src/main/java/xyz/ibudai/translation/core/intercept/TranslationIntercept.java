@@ -12,6 +12,7 @@ import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Component;
 import xyz.ibudai.translation.core.TranslateManager;
+
 import java.util.List;
 
 @Slf4j
@@ -66,6 +67,13 @@ public class TranslationIntercept implements Interceptor {
                 cacheKey,
                 boundSql
         );
-        return translateManager.fieldTranslate(dataList);
+
+        try {
+            return translateManager.fieldTranslate(dataList);
+        } catch (Throwable e) {
+            // 失败默认返回原值
+            log.error("TranslationIntercept error", e);
+            return dataList;
+        }
     }
 }

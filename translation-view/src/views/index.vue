@@ -1,15 +1,9 @@
 <template>
   <div>
     <el-container>
-      <el-header>
-        <el-row style="height: 100%; width: 100%">
-          <el-col :span="4">
-            <h2 style="color: white; line-height: 100%">
-              GIGA CLOUD TECH
-            </h2>
-          </el-col>
-
-          <el-col :span="20">
+      <el-header style="width: 100%">
+        <el-row style="width: 100%">
+          <el-col :span="24" style="overflow-x: auto">
             <el-menu
                 mode="horizontal"
                 :ellipsis="false"
@@ -20,6 +14,14 @@
                 active-text-color="#ffd04b"
                 class="home-menu"
             >
+              <el-menu-item
+                  class="head-banner"
+                  style="font-weight: bold; font-size: 16px; background: #72C1F2"
+              >
+                <h2 style="color: white; line-height: 100%;">
+                  GIGA CLOUD TECH
+                </h2>
+              </el-menu-item>
               <el-menu-item
                   v-for="item in menus"
                   :index="item.index"
@@ -65,13 +67,13 @@ export default {
           name: '列表展示'
         }, {
           index: 'detailView',
-          name: '产品详情'
+          name: '商品详情'
         }, {
           index: 'translateView',
           name: '文本翻译'
         }, {
           index: 'chatView',
-          name: '售后服务'
+          name: '对话翻译'
         }
       ]
     }
@@ -123,7 +125,6 @@ export default {
 .head-banner {
   font-weight: bold;
   font-size: 16px;
-  height: calc(100vh / 4);
   padding: 0 50px;
 }
 
@@ -144,13 +145,5 @@ export default {
 .home-menu {
   width: 100%;
   height: 100%;
-}
-
-.el-menu--collapse .el-menu .el-submenu, .el-menu--popup {
-  min-width: 120px !important;
-}
-
-.el-menu--horizontal > .el-menu-item:nth-child(4) {
-  margin-right: auto;
 }
 </style>

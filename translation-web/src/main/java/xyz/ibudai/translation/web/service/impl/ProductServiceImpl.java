@@ -1,6 +1,7 @@
 package xyz.ibudai.translation.web.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import xyz.ibudai.translation.core.annotation.EnableTranslation;
 import xyz.ibudai.translation.web.entity.Product;
 import xyz.ibudai.translation.web.dao.ProductDao;
 import xyz.ibudai.translation.web.entity.ProductDetail;
@@ -28,6 +29,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @EnableTranslation
     public ProductDetail getDetail() {
         return ProductDetail.create();
     }
