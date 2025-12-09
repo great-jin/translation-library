@@ -10,6 +10,7 @@ import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.plugin.*;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import xyz.ibudai.translation.core.TranslateManager;
 
@@ -32,11 +33,19 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TranslationIntercept implements Interceptor {
 
+    @Value("${engine.switch.intercept:true}")
+    private Boolean enableIntercept;
+
     private final TranslateManager translateManager;
 
 
     @Override
     public Object plugin(Object target) {
+        if (Boolean.FALSE.equals(enableIntercept)) {
+            // disable interceptor
+            return target;
+        }
+
         return Plugin.wrap(target, this);
     }
 
